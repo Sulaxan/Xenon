@@ -1,0 +1,50 @@
+@Command(names = {"something"})
+@CallRootIfInvalidSubCommand
+public class Something {
+
+    // ALL primitive types (+Strings and Enums) can be used
+
+    @Flag(names = {"-h"})
+    @SetIfExists // true if -h exists, false otherwise; if this annotation is used, variable MUST be a boolean and non-static
+    private boolean help;
+
+    @Flag(names = {"verbose"}, argsLengthMax = 1)
+    @DefaultString("LOW")
+    private String verboseLevel;
+
+    @Flag(names = {"force"})
+    @StopIfNotExist
+    private boolean force;
+
+    @Param(arg = 0)
+    @DefaultString("a") // DefaultValue now
+    private String someVar;
+
+    // CommandSender can be anything that implements the interface
+
+    @Root
+    public void root(CommandSender sender, String[] args) { // args will include ALL args; String[] args is OPTIONAL
+
+    }
+
+    @SubCommand(names = {"something"}, description = "Something", usage = "something")
+    public void something(CommandSender sender) { // String[] args is optional
+
+    }
+
+    @PermissionCheck(scope = ROOT)
+    public boolean hasPermission(CommandSender sender) {
+        return true;
+    }
+
+    @PermissionCheck(subCommands = {""}) // auto-scope to subCommand; only one name needs to be provided for sub commands with aliases
+    public boolean hasPermission(CommandSender sender) {
+        return true;
+    }
+}
+
+// Registering
+parser.register(Something.class)
+    .constructorParams(Object...)
+    OR
+    .constructorParams(() -> new Object[] {});

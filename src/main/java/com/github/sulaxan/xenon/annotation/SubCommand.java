@@ -1,4 +1,4 @@
-package me.sulaxan.xenon.annotation;
+package com.github.sulaxan.xenon.annotation;
 
 public @interface SubCommand {
 

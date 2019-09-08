@@ -1,4 +1,4 @@
-package me.sulaxan.xenon;
+package com.github.sulaxan.xenon;
 
 public @interface PermissionCheck {
 }

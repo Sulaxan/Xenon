@@ -1,6 +1,6 @@
-package me.sulaxan.xenon;
+package com.github.sulaxan.xenon;
 
-import me.sulaxan.xenon.sender.CommandSender;
+import com.github.sulaxan.xenon.sender.CommandSender;
 
 public interface Command {
 

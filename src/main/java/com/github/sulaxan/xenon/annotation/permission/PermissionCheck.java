@@ -1,4 +1,4 @@
-package me.sulaxan.xenon.annotation.permission;
+package com.github.sulaxan.xenon.annotation.permission;
 
 public @interface PermissionCheck {
 

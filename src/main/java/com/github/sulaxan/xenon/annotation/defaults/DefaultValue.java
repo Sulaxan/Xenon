@@ -1,6 +1,6 @@
-package me.sulaxan.xenon.annotation.defaults;
+package com.github.sulaxan.xenon.annotation.defaults;
 
-import me.sulaxan.xenon.annotation.defaults.internal.DefaultEnum;
+import com.github.sulaxan.xenon.annotation.defaults.internal.DefaultEnum;
 
 public @interface DefaultValue {
 

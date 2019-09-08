@@ -1,4 +1,4 @@
-package me.sulaxan.xenon.annotation;
+package com.github.sulaxan.xenon.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,6 +1,6 @@
-package me.sulaxan.xenon.data;
+package com.github.sulaxan.xenon.data;
 
-import me.sulaxan.xenon.annotation.Root;
+import com.github.sulaxan.xenon.annotation.Root;
 
 public class CommandData {
 

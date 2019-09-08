@@ -8,11 +8,11 @@ public class Something {
     @SetIfExists // true if -h exists, false otherwise; if this annotation is used, variable MUST be a boolean and non-static
     private boolean help;
 
-    @Flag(names = {"verbose"}, argsLengthMax = 1)
+    @Flag(names = {"--verbose"}, argsLengthMax = 1)
     @DefaultString("LOW")
     private String verboseLevel;
 
-    @Flag(names = {"force"})
+    @Flag(names = {"--force"})
     @StopIfNotExist
     private boolean force;
 

@@ -6,15 +6,13 @@ import com.github.sulaxan.xenon.annotation.permission.PermissionCheck;
 import com.github.sulaxan.xenon.data.mapping.ArgMapping;
 import com.github.sulaxan.xenon.data.mapping.FlagMapping;
 import com.github.sulaxan.xenon.data.mapping.PermissionMapping;
-import com.github.sulaxan.xenon.data.mapping.RootMapping;
+import com.github.sulaxan.xenon.data.mapping.CommandMapping;
 import com.github.sulaxan.xenon.exception.CommandParseException;
 import com.github.sulaxan.xenon.sender.CommandSender;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.text.ParseException;
 
 public class AnnotationParser {
 
@@ -63,18 +61,33 @@ public class AnnotationParser {
         return null;
     }
 
-    public static RootMapping parseRoot(Method method) {
-        if(method.isAnnotationPresent(Root.class)) {
-            if(method.getParameterCount() >= 1 && method.getParameterCount() <= 2) {
-                if(isValidParameter(method, 0, CommandSender.class)) {
-                    if(method.getParameterCount() == 2 && isValidParameter(method, 1, String[].class))
-                        throw new CommandParseException("Second argument must either be excluded " +
+    public static CommandMapping parseCommandType(Method method) {
+        if(method.getParameterCount() >= 1 && method.getParameterCount() <= 2) {
+            if(isValidParameter(method, 0, CommandSender.class)) {
+                if(method.getParameterCount() == 2 && isValidParameter(method, 1, String[].class))
+                    throw new CommandParseException("Second argument must either be excluded " +
                             "or be of type String[]");
 
-                    return new RootMapping(method, method.getParameterCount() == 2);
-                } else throw new CommandParseException("First argument must inherit CommandSender");
-            } else throw new CommandParseException("Not enough parameters for @Root method " +
-                    "(" + method.getName() + ")");
+                return new CommandMapping(method, method.getParameterCount() == 2);
+            } else throw new CommandParseException("First argument must inherit CommandSender");
+        } else throw new CommandParseException("Not enough parameters for method " +
+                "(" + method.getName() + ")");
+    }
+
+    public static CommandMapping parseRootMethod(Method method) {
+        if(method.isAnnotationPresent(Root.class)) {
+            return parseCommandType(method);
+        }
+
+        return null;
+    }
+
+    public static CommandMapping parseSubCommandMethod(Method method) {
+        if(method.isAnnotationPresent(SubCommand.class)) {
+            CommandMapping mapping = parseCommandType(method);
+            mapping.setSubCommand(method.getDeclaredAnnotation(SubCommand.class));
+
+            return mapping;
         }
 
         return null;

@@ -12,13 +12,13 @@ public class FlagMapping implements FieldMapping {
     private Flag flag;
     private Object defaultValue;
     private boolean setIfExists;
-    private boolean stopIfNotExists;
+    private boolean stopIfNotExist;
 
-    public FlagMapping(Field field, Flag flag, Object defaultValue, boolean setIfExists, boolean stopIfNotExists) {
+    public FlagMapping(Field field, Flag flag, Object defaultValue, boolean setIfExists, boolean stopIfNotExist) {
         this.field = field;
         this.flag = flag;
         this.defaultValue = defaultValue;
         this.setIfExists = setIfExists;
-        this.stopIfNotExists = stopIfNotExists;
+        this.stopIfNotExist = stopIfNotExist;
     }
 }

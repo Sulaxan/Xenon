@@ -9,9 +9,4 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Root {
 
-    String name();
-
-    String description() default "";
-
-    String usage() default "";
 }

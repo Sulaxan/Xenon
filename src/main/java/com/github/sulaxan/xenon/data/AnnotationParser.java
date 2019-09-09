@@ -1,19 +1,20 @@
 package com.github.sulaxan.xenon.data;
 
-import com.github.sulaxan.xenon.annotation.Flag;
-import com.github.sulaxan.xenon.annotation.Param;
-import com.github.sulaxan.xenon.annotation.SetIfExists;
-import com.github.sulaxan.xenon.annotation.StopIfNotExist;
+import com.github.sulaxan.xenon.annotation.*;
 import com.github.sulaxan.xenon.annotation.defaults.DefaultValue;
 import com.github.sulaxan.xenon.annotation.permission.PermissionCheck;
 import com.github.sulaxan.xenon.data.mapping.ArgMapping;
 import com.github.sulaxan.xenon.data.mapping.FlagMapping;
 import com.github.sulaxan.xenon.data.mapping.PermissionMapping;
+import com.github.sulaxan.xenon.data.mapping.RootMapping;
+import com.github.sulaxan.xenon.exception.CommandParseException;
 import com.github.sulaxan.xenon.sender.CommandSender;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.text.ParseException;
 
 public class AnnotationParser {
 
@@ -50,7 +51,8 @@ public class AnnotationParser {
                     return new ArgMapping(
                             field,
                             param.index(),
-                            getDefaultValue(field)
+                            getDefaultValue(field),
+                            field.isAnnotationPresent(StopIfNotExist.class)
                     );
                 } else throw new IndexOutOfBoundsException("Param index must be greater than 0");
             }
@@ -61,21 +63,33 @@ public class AnnotationParser {
         return null;
     }
 
+    public static RootMapping parseRoot(Method method) {
+        if(method.isAnnotationPresent(Root.class)) {
+            if(method.getParameterCount() >= 1 && method.getParameterCount() <= 2) {
+                if(isValidParameter(method, 0, CommandSender.class)) {
+                    if(method.getParameterCount() == 2 && isValidParameter(method, 1, String[].class))
+                        throw new CommandParseException("Second argument must either be excluded " +
+                            "or be of type String[]");
+
+                    return new RootMapping(method, method.getParameterCount() == 2);
+                } else throw new CommandParseException("First argument must inherit CommandSender");
+            } else throw new CommandParseException("Not enough parameters for @Root method " +
+                    "(" + method.getName() + ")");
+        }
+
+        return null;
+    }
+
     public static PermissionMapping parsePermission(Method method) {
         if(method.isAnnotationPresent(PermissionCheck.class)) {
             if(method.getParameterCount() == 1) {
-                try {
-                    method.getParameterTypes()[0].asSubclass(CommandSender.class);
-                } catch (ClassCastException e) {
-                    e.printStackTrace();
-                    System.err.println("Class must inherit CommandSender");
-                    return null;
-                }
-
-                return new PermissionMapping(
-                        method,
-                        method.getDeclaredAnnotation(PermissionCheck.class)
-                );
+                if(isValidParameter(method, 0, CommandSender.class)) {
+                    return new PermissionMapping(
+                            method,
+                            method.getDeclaredAnnotation(PermissionCheck.class)
+                    );
+                } else throw new ClassCastException("First parameter for permission mappings " +
+                        "must inherit CommandSender");
             }
         }
 
@@ -95,5 +109,14 @@ public class AnnotationParser {
         }
 
         return null;
+    }
+
+    public static boolean isValidParameter(Method method, int parameterIndex, Class<?> clazz) {
+        try {
+            method.getParameterTypes()[parameterIndex].asSubclass(clazz);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

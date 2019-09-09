@@ -1,6 +1,5 @@
 package com.github.sulaxan.xenon.data.mapping;
 
-import com.github.sulaxan.xenon.annotation.Root;
 import lombok.Getter;
 
 import java.lang.reflect.Method;
@@ -9,10 +8,10 @@ import java.lang.reflect.Method;
 public class RootMapping implements MethodMapping {
 
     private Method method;
-    private Root root;
+    private boolean includeArgs;
 
-    public RootMapping(Method method, Root root) {
+    public RootMapping(Method method, boolean includeArgs) {
         this.method = method;
-        this.root = root;
+        this.includeArgs = includeArgs;
     }
 }

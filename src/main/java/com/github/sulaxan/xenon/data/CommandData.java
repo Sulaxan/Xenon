@@ -1,14 +1,9 @@
 package com.github.sulaxan.xenon.data;
 
-import com.github.sulaxan.xenon.annotation.Root;
-import com.github.sulaxan.xenon.data.mapping.FlagMapping;
-import com.github.sulaxan.xenon.data.mapping.MethodMapping;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import com.github.sulaxan.xenon.data.mapping.*;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -17,43 +12,44 @@ import java.util.List;
 public class CommandData {
 
     private Class<?> commandClass;
-    private List<FlagMapping> fieldMappings = Lists.newCopyOnWriteArrayList();
-    private List<MethodMapping> methodMappings = Lists.newCopyOnWriteArrayList();
+    private CommandMapping rootMapping;
 
-    // Internal caching
-    private Cache<String, Object> objectCache = CacheBuilder.newBuilder().build();
+    private List<FlagMapping> flagMappings = Lists.newArrayList();
+    private List<ArgMapping> argMappings = Lists.newArrayList();
+
+    private List<CommandMapping> subCommandMappings = Lists.newArrayList();
+    private List<PermissionMapping> permissionMappings = Lists.newArrayList();
 
     public CommandData(Class<?> commandClass) {
         this.commandClass = commandClass;
     }
 
-    public MethodMapping getRootMapping() {
-        try {
-            return (MethodMapping) objectCache.get("root_mapping", () -> {
-                for(MethodMapping mapping : methodMappings) {
-                    if(mapping.hasAnnotation(Root.class))
-                        return mapping;
-                }
-                return null;
-            });
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
     public void parse() {
         try {
             for(Field field : commandClass.getDeclaredFields()) {
-                Annotation[] annotations = field.getDeclaredAnnotations();
-                if(annotations.length >= 1) {
-                    fieldMappings.add(new FlagMapping(field, Lists.newArrayList(annotations)));
+                FlagMapping flag = AnnotationParser.parseFlag(field);
+                if(flag != null) {
+                    flagMappings.add(flag);
+                    continue;
+                }
+
+                ArgMapping arg = AnnotationParser.parseArg(field);
+                if(arg != null) {
+                    argMappings.add(arg);
                 }
             }
-
             for(Method method : commandClass.getDeclaredMethods()) {
-                Annotation[] annotations = method.getDeclaredAnnotations();
-                if(annotations.length >= 1) {
-                    methodMappings.add(new MethodMapping(method, Lists.newArrayList(annotations)));
+                this.rootMapping = AnnotationParser.parseRootMethod(method);
+
+                CommandMapping subCommand = AnnotationParser.parseSubCommandMethod(method);
+                if(subCommand != null) {
+                    subCommandMappings.add(subCommand);
+                    continue;
+                }
+
+                PermissionMapping permission = AnnotationParser.parsePermission(method);
+                if(permission != null) {
+                    permissionMappings.add(permission);
                 }
             }
         } catch (Exception e) {

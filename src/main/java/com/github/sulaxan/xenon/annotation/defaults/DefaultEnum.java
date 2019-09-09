@@ -6,7 +6,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.ANNOTATION_TYPE)
-public @interface DefaultValue {
-}
+@Target(ElementType.TYPE)
+@DefaultValue
+public @interface DefaultEnum {
 
+    String value();
+
+    Class<? extends Enum> valueClass();
+}

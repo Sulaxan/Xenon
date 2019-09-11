@@ -7,11 +7,13 @@ import lombok.Getter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 @Getter
 public class DefaultCommandData implements CommandData {
 
     private Class<?> commandClass;
+    private Callable<Object[]> constructorArgs;
     private CommandMapping rootMapping;
 
     private List<FlagMapping> flagMappings = Lists.newArrayList();
@@ -20,8 +22,9 @@ public class DefaultCommandData implements CommandData {
     private List<CommandMapping> subCommandMappings = Lists.newArrayList();
     private List<PermissionMapping> permissionMappings = Lists.newArrayList();
 
-    public DefaultCommandData(Class<?> commandClass) {
+    public DefaultCommandData(Class<?> commandClass, Callable<Object[]> constructorArgs) {
         this.commandClass = commandClass;
+        this.constructorArgs = constructorArgs;
     }
 
     public void parse() {

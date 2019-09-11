@@ -16,7 +16,7 @@ public class DefaultCommandData implements CommandData {
     private Callable<Object[]> constructorArgs;
     private CommandMapping rootMapping;
 
-    private List<FlagMapping> flagMappings = Lists.newArrayList();
+    private List<OptionMapping> optionMappings = Lists.newArrayList();
     private List<ArgMapping> argMappings = Lists.newArrayList();
 
     private List<CommandMapping> subCommandMappings = Lists.newArrayList();
@@ -27,12 +27,37 @@ public class DefaultCommandData implements CommandData {
         this.constructorArgs = constructorArgs;
     }
 
+    @Override
+    public MethodMapping getSubCommandMapping(String subCommand) {
+        return null;
+    }
+
+    @Override
+    public MethodMapping getRootPermissionMapping() {
+        return null;
+    }
+
+    @Override
+    public MethodMapping getPermissionMapping(String command) {
+        return null;
+    }
+
+    @Override
+    public FieldMapping getFlagMapping(String flag) {
+        return null;
+    }
+
+    @Override
+    public FieldMapping getArgMapping(int index) {
+        return null;
+    }
+
     public void parse() {
         try {
             for(Field field : commandClass.getDeclaredFields()) {
-                FlagMapping flag = AnnotationParser.parseFlag(field);
+                OptionMapping flag = AnnotationParser.parseFlag(field);
                 if(flag != null) {
-                    flagMappings.add(flag);
+                    optionMappings.add(flag);
                     continue;
                 }
 

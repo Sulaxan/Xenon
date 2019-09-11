@@ -8,17 +8,13 @@ public class Something {
     @SetIfExists // true if -h exists, false otherwise; if this annotation is used, variable MUST be a boolean and non-static
     private boolean help;
 
-    @Flag(names = {"--verbose"}, argsLengthMax = 1)
+    @Flag(names = {"--verbose"})
     @DefaultString("LOW")
     private String verboseLevel;
 
     @Flag(names = {"--force"})
     @StopIfNotExist
     private boolean force;
-
-    @Param(arg = 0)
-    @DefaultString("a") // DefaultValue now
-    private String someVar;
 
     // CommandSender can be anything that implements the interface
 

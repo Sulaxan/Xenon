@@ -7,7 +7,9 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Flag {
+public @interface Option {
 
-    String[] names();
+    String value();
+
+    String longOption() default "";
 }

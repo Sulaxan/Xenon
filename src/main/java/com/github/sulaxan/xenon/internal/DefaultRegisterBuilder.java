@@ -30,6 +30,6 @@ public class DefaultRegisterBuilder implements RegisterBuilder {
 
     @Override
     public DefaultCommandData build() {
-        return new DefaultCommandData(commandClass, );
+        return new DefaultCommandData(commandClass, constructorArgs);
     }
 }

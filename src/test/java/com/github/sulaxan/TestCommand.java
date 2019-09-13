@@ -1,4 +1,37 @@
 package com.github.sulaxan;
 
+import com.github.sulaxan.xenon.annotation.Command;
+import com.github.sulaxan.xenon.annotation.Option;
+import com.github.sulaxan.xenon.annotation.Root;
+import com.github.sulaxan.xenon.annotation.SubCommand;
+import com.github.sulaxan.xenon.annotation.permission.PermissionCheck;
+import com.github.sulaxan.xenon.annotation.permission.PermissionScope;
+import com.github.sulaxan.xenon.sender.CommandSender;
+
+import java.util.concurrent.ThreadLocalRandom;
+
+@Command(names = {"test"}, desc = "HI!")
 public class TestCommand {
+
+    @Option(value = "print", required = true, desc = "Print")
+    private boolean print;
+
+    @Root
+    public void root(CommandSender sender, int val, String[] args) {
+        if(print) {
+            sender.sendMessage("val = " + val);
+        } else {
+            sender.sendError("No print!");
+        }
+    }
+
+    @SubCommand(name = "subcommand")
+    public void aSubCommand(CommandSender sender, String[] args) {
+
+    }
+
+    @PermissionCheck(scope = PermissionScope.ROOT)
+    public boolean hasPermission(CommandSender sender) {
+        return ThreadLocalRandom.current().nextInt(2) == 0;
+    }
 }

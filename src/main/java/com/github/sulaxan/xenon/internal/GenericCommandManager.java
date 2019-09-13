@@ -16,7 +16,6 @@ import org.apache.commons.cli.*;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class GenericCommandManager extends CommandManager {
 
@@ -134,7 +133,7 @@ public class GenericCommandManager extends CommandManager {
                     boolean hasPermission = (Boolean) permissionMapping.getMethod().invoke(commandObj, sender);
 
                     if(!hasPermission)
-                        throw new CommandParseException("Insufficient permissions");
+                        throw new RuntimeException("Insufficient permissions");
                 }
 
 

@@ -21,8 +21,23 @@ public class AnnotationParser {
 
     public static OptionMapping parseFlag(Field field) {
         if(field.isAnnotationPresent(Option.class)) {
-//            if(field.getType().isPrimitive() || field.getType().equals(String.class) ||
-//                    field.getType().equals())
+            Option option = field.getDeclaredAnnotation(Option.class);
+            int argCount = -1;
+            if(field.getType() == Boolean.class) {
+                argCount = 0;
+            } else if(field.getType() == String.class) {
+                argCount = 1;
+            } else throw new CommandParseException("Field type must either be Boolean or String");
+
+            org.apache.commons.cli.Option o = new org.apache.commons.cli.Option(
+                    option.value(),
+                    option.longOption(),
+                    argCount != 0,
+                    option.desc()
+            );
+
+            return new OptionMapping(field, argCount == 0 ? false : null, o);
+
         }
         return null;
     }

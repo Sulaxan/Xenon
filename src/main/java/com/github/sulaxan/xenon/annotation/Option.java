@@ -12,4 +12,8 @@ public @interface Option {
     String value();
 
     String longOption() default "";
+
+    boolean required() default false;
+
+    String desc() default "";
 }

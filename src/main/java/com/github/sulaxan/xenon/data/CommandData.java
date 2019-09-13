@@ -1,7 +1,6 @@
 package com.github.sulaxan.xenon.data;
 
 import com.github.sulaxan.xenon.data.mapping.CommandMethodMapping;
-import com.github.sulaxan.xenon.data.mapping.FieldMapping;
 import com.github.sulaxan.xenon.data.mapping.MethodMapping;
 import com.github.sulaxan.xenon.data.mapping.OptionMapping;
 import org.apache.commons.cli.Options;
@@ -18,6 +17,8 @@ public interface CommandData {
     String getName();
 
     String[] getAliases();
+
+    String getDescription();
 
     List<OptionMapping> getOptionMappings();
 

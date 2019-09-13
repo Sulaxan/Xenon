@@ -20,25 +20,10 @@ public class AnnotationParser {
     }
 
     public static OptionMapping parseFlag(Field field) {
-//        try {
-//            if(field.isAnnotationPresent(Option.class)) {
-//                Object defaultValue = getDefaultValue(field);
-//                Option opt = field.getDeclaredAnnotation(Option.class);
-//                org.apache.commons.cli.Option option = new org.apache.commons.cli.Option(opt.value(), );
-//                return new OptionMapping(
-//                        field,
-//                        field.getDeclaredAnnotation(Option.class),
-//                        defaultValue,
-//                        field.isAnnotationPresent(SetIfExists.class),
-//                        field.isAnnotationPresent(StopIfNotExist.class)
-//                );
-//            } else {
-//                return null;
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
+        if(field.isAnnotationPresent(Option.class)) {
+//            if(field.getType().isPrimitive() || field.getType().equals(String.class) ||
+//                    field.getType().equals())
+        }
         return null;
     }
 

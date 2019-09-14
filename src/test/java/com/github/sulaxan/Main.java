@@ -11,13 +11,11 @@ public class Main {
         GenericCommandManager manager = new GenericCommandManager();
         manager.register(TestCommand.class).build();
 
-//        manager.execute(new ConsoleCommandSender(), "test -print 1");
-
         Scanner s = new Scanner(System.in);
 
         while(true) {
             String line = s.nextLine();
-            manager.execute(new ConsoleCommandSender(), line);
+            manager.execute(ConsoleCommandSender.INSTANCE, line);
         }
     }
 }

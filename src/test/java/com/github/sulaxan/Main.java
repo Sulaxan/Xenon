@@ -1,14 +1,14 @@
 package com.github.sulaxan;
 
 import com.github.sulaxan.xenon.sender.ConsoleCommandSender;
-import com.github.sulaxan.xenon.internal.GenericCommandManager;
+import com.github.sulaxan.xenon.internal.DefaultCommandManager;
 
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-        GenericCommandManager manager = new GenericCommandManager();
+        DefaultCommandManager manager = new DefaultCommandManager();
         manager.register(TestCommand.class).build();
 
         Scanner s = new Scanner(System.in);

@@ -20,12 +20,12 @@ import java.util.Arrays;
 import java.util.List;
 
 @Getter
-public class GenericCommandManager extends CommandManager {
+public class DefaultCommandManager extends CommandManager {
 
     private List<DefaultCommandData> commandData = Lists.newCopyOnWriteArrayList();
     private CommandLineParser parser = new DefaultParser();
 
-    public GenericCommandManager() {
+    public DefaultCommandManager() {
     }
 
     @Override

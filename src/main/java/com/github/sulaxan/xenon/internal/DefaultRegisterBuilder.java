@@ -7,11 +7,11 @@ import java.util.concurrent.Callable;
 
 public class DefaultRegisterBuilder implements RegisterBuilder {
 
-    private GenericCommandManager commandManager;
+    private DefaultCommandManager commandManager;
     private Class<?> commandClass;
     private Callable<Object[]> constructorArgs;
 
-    public DefaultRegisterBuilder(GenericCommandManager commandManager) {
+    public DefaultRegisterBuilder(DefaultCommandManager commandManager) {
         this.commandManager = commandManager;
     }
 

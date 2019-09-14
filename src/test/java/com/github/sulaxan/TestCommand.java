@@ -11,16 +11,18 @@ import com.github.sulaxan.xenon.sender.CommandSender;
 @Command(names = {"test"}, desc = "HI!")
 public class TestCommand {
 
-    @Option(value = "print", required = true, desc = "Print")
+    @Option(value = "print", required = false, desc = "Print")
     private boolean print;
+    @Option(value = "e", desc = "Quit")
+    private boolean exit;
+    @Option(value = "data", desc = "Data")
+    private String data;
 
     @Root
     public void root(CommandSender sender, String[] args) {
-        if(print) {
-            sender.sendMessage("output");
-        } else {
-            sender.sendError("No print!");
-        }
+        sender.sendMessage("Print: " + print);
+        sender.sendMessage("exit: " + exit);
+        sender.sendMessage("data: " + data);
     }
 
     @SubCommand(name = "subcommand")
@@ -31,5 +33,10 @@ public class TestCommand {
     @PermissionCheck(scope = PermissionScope.ROOT)
     public boolean hasPermission(CommandSender sender) {
         return true;
+    }
+
+    @PermissionCheck(subCommands = {"subcommand"})
+    public boolean hasPermissionSubCommand(CommandSender sender) {
+        return false;
     }
 }

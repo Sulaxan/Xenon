@@ -1,6 +1,6 @@
 package com.github.sulaxan.xenon.exception;
 
-public class CommandParseException extends RuntimeException {
+public class CommandParseException extends CommandRuntimeException {
 
     public CommandParseException() {
     }

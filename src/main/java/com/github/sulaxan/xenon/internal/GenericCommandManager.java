@@ -6,7 +6,9 @@ import com.github.sulaxan.xenon.data.DefaultCommandData;
 import com.github.sulaxan.xenon.data.mapping.CommandMethodMapping;
 import com.github.sulaxan.xenon.data.mapping.MethodMapping;
 import com.github.sulaxan.xenon.data.mapping.OptionMapping;
+import com.github.sulaxan.xenon.exception.CommandNotFoundException;
 import com.github.sulaxan.xenon.exception.CommandParseException;
+import com.github.sulaxan.xenon.exception.NotEnoughPermissionsException;
 import com.github.sulaxan.xenon.manager.CommandManager;
 import com.github.sulaxan.xenon.manager.RegisterBuilder;
 import com.github.sulaxan.xenon.sender.CommandSender;
@@ -65,8 +67,8 @@ public class GenericCommandManager extends CommandManager {
         try {
             parseAndRun(sender, command);
         } catch (Exception e) {
-            sender.sendError("Something went wrong while parsing command: " +
-                    e.getClass().getName() + " " + e.getMessage());
+            sender.sendError("Something went wrong while parsing the command: " +
+                    e.getClass().getSimpleName() + " " + e.getMessage());
         }
     }
 
@@ -108,7 +110,7 @@ public class GenericCommandManager extends CommandManager {
             CommandLine line = parser.parse(data.getOptions(), args, false);
             for(OptionMapping mapping : data.getOptionMappings()) {
                 String opt = line.getOptionValue(mapping.getOption().getOpt(), null);
-                // If the arg is required, and it doesn't exist, Apache Common CLI will throw an exception
+                // If the arg is required, and it doesn't exist, Apache's Common CLI will throw an exception
                 // This means we do not need to handle that ourselves
 
                 // Set the field in the command object
@@ -116,7 +118,7 @@ public class GenericCommandManager extends CommandManager {
                 if(mapping.getField().getType() == String.class) {
                     value = opt;
                 } else {
-                    value = true;
+                    value = line.hasOption(mapping.getOption().getOpt());
                 }
 
                 setField(
@@ -154,7 +156,7 @@ public class GenericCommandManager extends CommandManager {
                 boolean hasPermission = (Boolean) permissionMapping.getMethod().invoke(commandObj, sender);
 
                 if(!hasPermission)
-                    throw new RuntimeException("Insufficient permissions");
+                    throw new NotEnoughPermissionsException("Insufficient permissions");
             }
 
             // Add all objects required for the method to be invoked
@@ -167,9 +169,11 @@ public class GenericCommandManager extends CommandManager {
             // Finally, call the command
             callMethod.getMethod().invoke(commandObj, methodArgs.toArray());
 
-            // break; so we don't parse another command
-            break;
+            // return; so we don't parse another command
+            return;
         }
+
+        throw new CommandNotFoundException("Could not parse " + command);
     }
 
     private void setField(Field field, Object object, Object value) {

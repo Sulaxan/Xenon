@@ -1,7 +1,6 @@
 package com.github.sulaxan.xenon.internal;
 
 import com.github.sulaxan.xenon.data.CommandData;
-import com.github.sulaxan.xenon.data.DefaultCommandData;
 import com.github.sulaxan.xenon.data.mapping.CommandMethodMapping;
 import com.github.sulaxan.xenon.data.mapping.MethodMapping;
 import com.github.sulaxan.xenon.data.mapping.OptionMapping;
@@ -22,7 +21,7 @@ import java.util.List;
 @Getter
 public class DefaultCommandManager extends CommandManager {
 
-    private List<DefaultCommandData> commandData = Lists.newCopyOnWriteArrayList();
+    private List<CommandData> commandData = Lists.newCopyOnWriteArrayList();
     private CommandLineParser parser = new DefaultParser();
 
     public DefaultCommandManager() {
@@ -34,14 +33,14 @@ public class DefaultCommandManager extends CommandManager {
     }
 
     @Override
-    public List<DefaultCommandData> getCommandData() {
+    public List<CommandData> getCommandData() {
         return commandData;
     }
 
     @Override
-    public DefaultCommandData findCommand(String command) throws CommandParseException {
+    public CommandData findCommand(String command) throws CommandParseException {
         String[] args = command.split("\\s");
-        for(DefaultCommandData data : commandData) {
+        for(CommandData data : commandData) {
             if(data.getName().equalsIgnoreCase(args[0]))
                 return data;
 

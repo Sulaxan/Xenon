@@ -1,7 +1,6 @@
 package com.github.sulaxan.xenon.data;
 
 import com.github.sulaxan.xenon.annotation.*;
-import com.github.sulaxan.xenon.annotation.defaults.DefaultValue;
 import com.github.sulaxan.xenon.annotation.permission.PermissionCheck;
 import com.github.sulaxan.xenon.data.mapping.OptionMapping;
 import com.github.sulaxan.xenon.data.mapping.PermissionMapping;
@@ -9,7 +8,6 @@ import com.github.sulaxan.xenon.data.mapping.CommandMapping;
 import com.github.sulaxan.xenon.exception.CommandParseException;
 import com.github.sulaxan.xenon.sender.CommandSender;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -87,21 +85,6 @@ public class AnnotationParser {
                 } else throw new ClassCastException("First parameter for permission mappings " +
                         "must inherit CommandSender");
             }
-        }
-
-        return null;
-    }
-
-    public static Object getDefaultValue(Field field) {
-        try {
-            for(Annotation annotation : field.getAnnotations()) {
-                if(annotation.annotationType().isAnnotationPresent(DefaultValue.class)) {
-                    // Temp
-                    return annotation.annotationType().getDeclaredMethod("value").invoke(null);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         return null;

@@ -1,6 +1,6 @@
 package com.github.sulaxan;
 
-import com.github.sulaxan.xenon.internal.ConsoleCommandSender;
+import com.github.sulaxan.xenon.sender.ConsoleCommandSender;
 import com.github.sulaxan.xenon.internal.GenericCommandManager;
 
 import java.util.Scanner;

@@ -6,8 +6,7 @@ import lombok.Setter;
 
 import java.lang.reflect.Method;
 
-@Getter
-public class CommandMapping implements MethodMapping {
+public class CommandMapping implements CommandMethodMapping {
 
     private Method method;
     private boolean includeArgs;
@@ -26,7 +25,23 @@ public class CommandMapping implements MethodMapping {
         this.subCommand = subCommand;
     }
 
+    @Override
+    public boolean includeArgs() {
+        return includeArgs;
+    }
+
+    @Override
     public boolean isSubCommand() {
         return subCommand != null;
+    }
+
+    @Override
+    public SubCommand getSubCommand() {
+        return subCommand;
+    }
+
+    @Override
+    public Method getMethod() {
+        return method;
     }
 }

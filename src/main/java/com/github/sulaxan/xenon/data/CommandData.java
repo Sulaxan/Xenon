@@ -1,8 +1,8 @@
 package com.github.sulaxan.xenon.data;
 
 import com.github.sulaxan.xenon.data.mapping.CommandMethodMapping;
-import com.github.sulaxan.xenon.data.mapping.MethodMapping;
 import com.github.sulaxan.xenon.data.mapping.OptionMapping;
+import com.github.sulaxan.xenon.data.mapping.PermissionMethodMapping;
 import org.apache.commons.cli.Options;
 
 import java.util.List;
@@ -30,11 +30,9 @@ public interface CommandData {
 
     CommandMethodMapping getSubCommand(String subCommand);
 
-    List<MethodMapping> getPermissionMappings();
+    List<PermissionMethodMapping> getPermissionMappings();
 
-    MethodMapping getSubCommandMapping(String subCommand);
+    PermissionMethodMapping getRootPermissionMapping();
 
-    MethodMapping getRootPermissionMapping();
-
-    MethodMapping getPermissionMapping(String subCommand);
+    PermissionMethodMapping getPermissionMapping(String subCommand);
 }

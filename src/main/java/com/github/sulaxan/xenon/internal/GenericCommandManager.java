@@ -136,21 +136,12 @@ public class GenericCommandManager extends CommandManager {
                         throw new RuntimeException("Insufficient permissions");
                 }
 
-
-                // Check if the parameter count and arg count from command are equal
-                // This count excludes the sender object and the optional String[] args object
-                if(callMethod.getParameterTypes().length != commandArgs.length)
-                    throw new CommandParseException("Specified arg count and method arg count don't match");
-
                 // Add all objects required for the method to be invoked
                 List<Object> methodArgs = Lists.newArrayList(sender);
-                for(int i = 0; i < callMethod.getParameterTypes().length; i++) {
-                    methodArgs.add(parseObject(callMethod.getParameterTypes()[i], commandArgs[i]));
-                }
 
                 // Add the args if required
                 if(callMethod.includeArgs())
-                    methodArgs.add(args);
+                    methodArgs.add(commandArgs);
 
                 // Finally, call the command
                 callMethod.getMethod().invoke(commandObj, methodArgs.toArray());

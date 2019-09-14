@@ -1,12 +1,10 @@
 package com.github.sulaxan.xenon.data.mapping;
 
 import com.github.sulaxan.xenon.annotation.permission.PermissionCheck;
-import lombok.Getter;
 
 import java.lang.reflect.Method;
 
-@Getter
-public class PermissionMapping implements MethodMapping {
+public class PermissionMapping implements PermissionMethodMapping {
 
     private Method method;
     private PermissionCheck check;
@@ -14,5 +12,15 @@ public class PermissionMapping implements MethodMapping {
     public PermissionMapping(Method method, PermissionCheck check) {
         this.method = method;
         this.check = check;
+    }
+
+    @Override
+    public Method getMethod() {
+        return method;
+    }
+
+    @Override
+    public PermissionCheck getCheck() {
+        return check;
     }
 }

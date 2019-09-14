@@ -1,6 +1,5 @@
 package com.github.sulaxan.xenon.internal;
 
-import com.github.sulaxan.xenon.annotation.Command;
 import com.github.sulaxan.xenon.data.CommandData;
 import com.github.sulaxan.xenon.data.DefaultCommandData;
 import com.github.sulaxan.xenon.data.mapping.CommandMethodMapping;

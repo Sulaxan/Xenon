@@ -7,8 +7,13 @@ import java.util.concurrent.Callable;
 
 public class DefaultRegisterBuilder implements RegisterBuilder {
 
+    private GenericCommandManager commandManager;
     private Class<?> commandClass;
     private Callable<Object[]> constructorArgs;
+
+    public DefaultRegisterBuilder(GenericCommandManager commandManager) {
+        this.commandManager = commandManager;
+    }
 
     @Override
     public RegisterBuilder withCommandClass(Class<?> commandClass) {
@@ -32,6 +37,7 @@ public class DefaultRegisterBuilder implements RegisterBuilder {
     public DefaultCommandData build() {
         DefaultCommandData data = new DefaultCommandData(commandClass, constructorArgs);
         data.parse();
+        commandManager.getCommandData().add(data);
         return data;
     }
 }

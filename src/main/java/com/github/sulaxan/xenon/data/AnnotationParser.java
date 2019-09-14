@@ -19,11 +19,11 @@ public class AnnotationParser {
     private AnnotationParser() {
     }
 
-    public static OptionMapping parseFlag(Field field) {
+    public static OptionMapping parseOption(Field field) {
         if(field.isAnnotationPresent(Option.class)) {
             Option option = field.getDeclaredAnnotation(Option.class);
-            int argCount = -1;
-            if(field.getType() == Boolean.class) {
+            int argCount;
+            if(field.getType() == boolean.class) {
                 argCount = 0;
             } else if(field.getType() == String.class) {
                 argCount = 1;
@@ -45,7 +45,7 @@ public class AnnotationParser {
     public static CommandMapping parseCommandType(Method method) {
         if(method.getParameterCount() >= 1 && method.getParameterCount() <= 2) {
             if(isValidParameter(method, 0, CommandSender.class)) {
-                if(method.getParameterCount() == 2 && isValidParameter(method, 1, String[].class))
+                if(method.getParameterCount() == 2 && !isValidParameter(method, 1, String[].class))
                     throw new CommandParseException("Second argument must either be excluded " +
                             "or be of type String[]");
                 return new CommandMapping(method, method.getParameterCount() == 2);
@@ -77,7 +77,7 @@ public class AnnotationParser {
         if(method.isAnnotationPresent(PermissionCheck.class)) {
             if(method.getParameterCount() == 1) {
                 if(isValidParameter(method, 0, CommandSender.class)) {
-                    if(method.getReturnType() == Boolean.class) {
+                    if(method.getReturnType() == boolean.class || method.getReturnType() == Boolean.class) {
                         return new PermissionMapping(
                                 method,
                                 method.getDeclaredAnnotation(PermissionCheck.class)

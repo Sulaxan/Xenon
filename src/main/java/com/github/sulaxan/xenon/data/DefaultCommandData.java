@@ -126,7 +126,7 @@ public class DefaultCommandData implements CommandData {
                 } else throw new CommandParseException("Commands must have at least 1 name");
             } else throw new CommandParseException("Commands must have the Command annotation");
             for(Field field : commandClass.getDeclaredFields()) {
-                OptionMapping flag = AnnotationParser.parseFlag(field);
+                OptionMapping flag = AnnotationParser.parseOption(field);
                 if(flag != null) {
                     optionMappings.add(flag);
                 }

@@ -17,9 +17,9 @@ public class TestCommand {
     private boolean print;
 
     @Root
-    public void root(CommandSender sender, int val, String[] args) {
+    public void root(CommandSender sender, String[] args) {
         if(print) {
-            sender.sendMessage("val = " + val);
+            sender.sendMessage("output");
         } else {
             sender.sendError("No print!");
         }

@@ -11,12 +11,14 @@ import com.github.sulaxan.xenon.manager.CommandManager;
 import com.github.sulaxan.xenon.manager.RegisterBuilder;
 import com.github.sulaxan.xenon.sender.CommandSender;
 import com.google.common.collect.Lists;
+import lombok.Getter;
 import org.apache.commons.cli.*;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
+@Getter
 public class GenericCommandManager extends CommandManager {
 
     private List<DefaultCommandData> commandData = Lists.newCopyOnWriteArrayList();
@@ -27,7 +29,7 @@ public class GenericCommandManager extends CommandManager {
 
     @Override
     public RegisterBuilder register(Class<?> commandClass) {
-        return new DefaultRegisterBuilder().withCommandClass(commandClass);
+        return new DefaultRegisterBuilder(this).withCommandClass(commandClass);
     }
 
     @Override
@@ -79,10 +81,14 @@ public class GenericCommandManager extends CommandManager {
                 args = args.length > 1 ? Arrays.copyOfRange(args, 1, args.length) : new String[0];
 
                 // Construct the object using the constructor args
-                Object[] constructorArgs = data.getConstructorArgs().call();
-                Class<?>[] classes = new Class[constructorArgs.length];
-                for(int i = 0; i < constructorArgs.length; i++) {
-                    classes[i] = constructorArgs[i].getClass();
+                Object[] constructorArgs = new Object[0];
+                Class<?>[] classes = new Class[0];
+                if(data.getConstructorArgs() != null) {
+                     constructorArgs = data.getConstructorArgs().call();
+                     classes = new Class[constructorArgs.length];
+                     for (int i = 0; i < constructorArgs.length; i++) {
+                         classes[i] = constructorArgs[i].getClass();
+                     }
                 }
 
                 Object commandObj = data.getCommandClass().getConstructor(classes).newInstance(constructorArgs);
@@ -150,7 +156,7 @@ public class GenericCommandManager extends CommandManager {
                 break;
             }
         } catch (Exception e) {
-            throw new CommandParseException(e.getMessage());
+            e.printStackTrace();
         }
     }
 

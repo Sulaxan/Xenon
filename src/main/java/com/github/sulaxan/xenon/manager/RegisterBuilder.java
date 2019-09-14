@@ -1,6 +1,6 @@
 package com.github.sulaxan.xenon.manager;
 
-import com.github.sulaxan.xenon.data.DefaultCommandData;
+import com.github.sulaxan.xenon.data.CommandData;
 
 import java.util.concurrent.Callable;
 
@@ -12,5 +12,5 @@ public interface RegisterBuilder {
 
     RegisterBuilder withConstructorArgs(Callable<Object[]> callableArgs);
 
-    DefaultCommandData build();
+    CommandData build();
 }

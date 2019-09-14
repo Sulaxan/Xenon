@@ -7,7 +7,7 @@ public class Main {
 
     public static void main(String[] args) {
         GenericCommandManager manager = new GenericCommandManager();
-        manager.register(TestCommand.class);
+        manager.register(TestCommand.class).build();
 
         manager.execute(new ConsoleCommandSender(), "test -print 1");
     }

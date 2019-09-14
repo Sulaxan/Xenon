@@ -5,6 +5,10 @@ import org.apache.commons.cli.Option;
 
 import java.lang.reflect.Field;
 
+/**
+ * Implementation of {@link FieldMapping} representing information
+ * about option fields.
+ */
 @Getter
 public class OptionMapping implements FieldMapping {
 

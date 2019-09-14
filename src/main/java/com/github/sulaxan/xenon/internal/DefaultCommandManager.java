@@ -74,7 +74,7 @@ public class DefaultCommandManager extends CommandManager {
         String[] args = command.split("\\s");
         // Match the command with the data
         for(CommandData data : commandData) {
-            // Find the alias if the command name couldn't be matched
+            // Find the alias if the command value couldn't be matched
             if(!data.getName().equalsIgnoreCase(args[0])) {
                 boolean found = false;
                 for(String alias : data.getAliases()) {

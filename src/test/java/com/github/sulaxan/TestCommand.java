@@ -25,7 +25,7 @@ public class TestCommand {
         sender.sendMessage("data: " + data);
     }
 
-    @SubCommand(name = "subcommand")
+    @SubCommand("subcommand")
     public void aSubCommand(CommandSender sender, String[] args) {
         sender.sendMessage("hi!");
     }

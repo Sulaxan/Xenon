@@ -86,7 +86,7 @@ public class DefaultCommandData implements CommandData {
     @Override
     public CommandMethodMapping getSubCommand(String subCommand) {
         for(CommandMethodMapping mapping : subCommandMappings) {
-            if(mapping.getSubCommand().name().equalsIgnoreCase(subCommand))
+            if(mapping.getSubCommand().value().equalsIgnoreCase(subCommand))
                 return mapping;
         }
         return null;
@@ -123,7 +123,7 @@ public class DefaultCommandData implements CommandData {
                     if(names.length >= 2)
                         aliases = Arrays.copyOfRange(names, 1, names.length);
                     description = command.desc();
-                } else throw new CommandParseException("Commands must have at least 1 name");
+                } else throw new CommandParseException("Commands must have at least 1 value");
             } else throw new CommandParseException("Commands must have the Command annotation");
             for(Field field : commandClass.getDeclaredFields()) {
                 OptionMapping flag = AnnotationParser.parseOption(field);

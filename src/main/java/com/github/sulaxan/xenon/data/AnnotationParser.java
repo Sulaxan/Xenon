@@ -35,6 +35,7 @@ public class AnnotationParser {
                     argCount != 0,
                     option.desc()
             );
+            o.setRequired(option.required());
 
             return new OptionMapping(field, argCount == 0 ? false : null, o);
 

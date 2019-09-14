@@ -59,104 +59,116 @@ public class GenericCommandManager extends CommandManager {
         if(command.length() == 0)
             return;
 
+        if(sender == null)
+            return;
+
         try {
-            String[] args = command.split("\\s");
-            // Match the command with the data
-            for(CommandData data : commandData) {
-                // Find the alias if the command name couldn't be matched
-                if(!data.getName().equalsIgnoreCase(args[0])) {
-                    boolean found = false;
-                    for(String alias : data.getAliases()) {
-                        if(alias.equalsIgnoreCase(args[0])) {
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    if(!found)
-                        return;
-                }
-
-                // Remove the first arg (command portion) from the string
-                args = args.length > 1 ? Arrays.copyOfRange(args, 1, args.length) : new String[0];
-
-                // Construct the object using the constructor args
-                Object[] constructorArgs = new Object[0];
-                Class<?>[] classes = new Class[0];
-                if(data.getConstructorArgs() != null) {
-                     constructorArgs = data.getConstructorArgs().call();
-                     classes = new Class[constructorArgs.length];
-                     for (int i = 0; i < constructorArgs.length; i++) {
-                         classes[i] = constructorArgs[i].getClass();
-                     }
-                }
-
-                Object commandObj = data.getCommandClass().getConstructor(classes).newInstance(constructorArgs);
-
-                // Parse the command using Apache's CommandLineParser
-                CommandLine line = parser.parse(data.getOptions(), args, false);
-                for(OptionMapping mapping : data.getOptionMappings()) {
-                    String opt = line.getOptionValue(mapping.getOption().getOpt(), null);
-                    // Throw parse exception if the option doesn't exist and is required
-                    if(mapping.getOption().isRequired() && opt == null)
-                        throw new CommandParseException("Option " + mapping.getOption().getOpt() +
-                                " is required but does not exist");
-
-                    // Set the field in the command object
-                    setField(
-                            mapping.getField(),
-                            commandObj,
-                            opt != null ? parseObject(mapping.getField().getType(), opt) :
-                                    mapping.getDefaultValue()
-                    );
-                }
-
-                // Get the sub command method mapping if it exists...
-                CommandMethodMapping callMethod = null;
-                boolean root = true;
-                String[] commandArgs = line.getArgs();
-                String subCommand = null;
-                if(commandArgs.length >= 1) {
-                    callMethod = data.getSubCommand(commandArgs[0]);
-                    if(callMethod != null) {
-                        subCommand = commandArgs[0];
-                        commandArgs = commandArgs.length >= 2 ?
-                                Arrays.copyOfRange(commandArgs, 1, commandArgs.length) : new String[0];
-                        root = false;
-                    }
-                }
-
-                // ... or default to the root mapping
-                if(callMethod == null)
-                    callMethod = data.getRootMapping();
-
-                // Check permissions
-                MethodMapping permissionMapping = root ? data.getRootPermissionMapping() :
-                        data.getPermissionMapping(subCommand);
-
-                if(permissionMapping != null) {
-                    // We can assume it's a boolean since it's checked when the command gets parsed
-                    boolean hasPermission = (Boolean) permissionMapping.getMethod().invoke(commandObj, sender);
-
-                    if(!hasPermission)
-                        throw new RuntimeException("Insufficient permissions");
-                }
-
-                // Add all objects required for the method to be invoked
-                List<Object> methodArgs = Lists.newArrayList(sender);
-
-                // Add the args if required
-                if(callMethod.includeArgs())
-                    methodArgs.add(commandArgs);
-
-                // Finally, call the command
-                callMethod.getMethod().invoke(commandObj, methodArgs.toArray());
-
-                // break; so we don't parse another command
-                break;
-            }
+            parseAndRun(sender, command);
         } catch (Exception e) {
-            e.printStackTrace();
+            sender.sendError("Something went wrong while parsing command: " +
+                    e.getClass().getName() + " " + e.getMessage());
+        }
+    }
+
+    private void parseAndRun(CommandSender sender, String command) throws Exception {
+        String[] args = command.split("\\s");
+        // Match the command with the data
+        for(CommandData data : commandData) {
+            // Find the alias if the command name couldn't be matched
+            if(!data.getName().equalsIgnoreCase(args[0])) {
+                boolean found = false;
+                for(String alias : data.getAliases()) {
+                    if(alias.equalsIgnoreCase(args[0])) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if(!found)
+                    return;
+            }
+
+            // Remove the first arg (command portion) from the string
+            args = args.length > 1 ? Arrays.copyOfRange(args, 1, args.length) : new String[0];
+
+            // Construct the object using the constructor args
+            Object[] constructorArgs = new Object[0];
+            Class<?>[] classes = new Class[0];
+            if(data.getConstructorArgs() != null) {
+                constructorArgs = data.getConstructorArgs().call();
+                classes = new Class[constructorArgs.length];
+                for (int i = 0; i < constructorArgs.length; i++) {
+                    classes[i] = constructorArgs[i].getClass();
+                }
+            }
+
+            Object commandObj = data.getCommandClass().getConstructor(classes).newInstance(constructorArgs);
+
+            // Parse the command using Apache's CommandLineParser
+            CommandLine line = parser.parse(data.getOptions(), args, false);
+            for(OptionMapping mapping : data.getOptionMappings()) {
+                String opt = line.getOptionValue(mapping.getOption().getOpt(), null);
+                // If the arg is required, and it doesn't exist, Apache Common CLI will throw an exception
+                // This means we do not need to handle that ourselves
+
+                // Set the field in the command object
+                Object value;
+                if(mapping.getField().getType() == String.class) {
+                    value = opt;
+                } else {
+                    value = true;
+                }
+
+                setField(
+                        mapping.getField(),
+                        commandObj,
+                        value
+                );
+            }
+
+            // Get the sub command method mapping if it exists...
+            CommandMethodMapping callMethod = null;
+            boolean root = true;
+            String[] commandArgs = line.getArgs();
+            String subCommand = null;
+            if(commandArgs.length >= 1) {
+                callMethod = data.getSubCommand(commandArgs[0]);
+                if(callMethod != null) {
+                    subCommand = commandArgs[0];
+                    commandArgs = commandArgs.length >= 2 ?
+                            Arrays.copyOfRange(commandArgs, 1, commandArgs.length) : new String[0];
+                    root = false;
+                }
+            }
+
+            // ... or default to the root mapping
+            if(callMethod == null)
+                callMethod = data.getRootMapping();
+
+            // Check permissions
+            MethodMapping permissionMapping = root ? data.getRootPermissionMapping() :
+                    data.getPermissionMapping(subCommand);
+
+            if(permissionMapping != null) {
+                // We can assume it's a boolean since it's checked when the command gets parsed
+                boolean hasPermission = (Boolean) permissionMapping.getMethod().invoke(commandObj, sender);
+
+                if(!hasPermission)
+                    throw new RuntimeException("Insufficient permissions");
+            }
+
+            // Add all objects required for the method to be invoked
+            List<Object> methodArgs = Lists.newArrayList(sender);
+
+            // Add the args if required
+            if(callMethod.includeArgs())
+                methodArgs.add(commandArgs);
+
+            // Finally, call the command
+            callMethod.getMethod().invoke(commandObj, methodArgs.toArray());
+
+            // break; so we don't parse another command
+            break;
         }
     }
 
@@ -167,39 +179,5 @@ public class GenericCommandManager extends CommandManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private Object parseObject(Class clazz, String value) {
-        if(clazz == Byte.class) {
-            return Byte.valueOf(value);
-        } else if(clazz == Short.class) {
-            return Short.valueOf(value);
-        } else if(clazz == Integer.class) {
-            return Integer.valueOf(value);
-        } else if(clazz == Long.class) {
-            return Long.valueOf(value);
-        } else if(clazz == Float.class) {
-            return Float.valueOf(value);
-        } else if(clazz == Double.class) {
-            return Double.valueOf(value);
-        } else if(clazz == String.class) {
-            return value;
-        } else if(clazz.isEnum()) {
-            return matchEnum(clazz, value);
-        }
-        return null;
-    }
-
-    private <T extends Enum> T matchEnum(Class<T> clazz, String value) {
-        for(T constant : clazz.getEnumConstants()) {
-            try {
-                if (constant.name().equalsIgnoreCase(value))
-                    return constant;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        return null;
     }
 }

@@ -8,8 +8,6 @@ import com.github.sulaxan.xenon.annotation.permission.PermissionCheck;
 import com.github.sulaxan.xenon.annotation.permission.PermissionScope;
 import com.github.sulaxan.xenon.sender.CommandSender;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 @Command(names = {"test"}, desc = "HI!")
 public class TestCommand {
 
@@ -27,11 +25,11 @@ public class TestCommand {
 
     @SubCommand(name = "subcommand")
     public void aSubCommand(CommandSender sender, String[] args) {
-
+        sender.sendMessage("hi!");
     }
 
     @PermissionCheck(scope = PermissionScope.ROOT)
     public boolean hasPermission(CommandSender sender) {
-        return ThreadLocalRandom.current().nextInt(2) == 0;
+        return true;
     }
 }

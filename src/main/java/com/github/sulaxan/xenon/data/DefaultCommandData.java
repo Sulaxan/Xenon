@@ -132,7 +132,13 @@ public class DefaultCommandData implements CommandData {
                 }
             }
             for(Method method : commandClass.getDeclaredMethods()) {
-                this.rootMapping = AnnotationParser.parseRootMethod(method);
+                CommandMapping rootMapping = AnnotationParser.parseRootMethod(method);
+                if(rootMapping != null) {
+                    if(this.rootMapping == null) {
+                        this.rootMapping = rootMapping;
+                        continue;
+                    } else throw new CommandParseException("Too many root methods: only one root method can exist");
+                }
 
                 CommandMapping subCommand = AnnotationParser.parseSubCommandMethod(method);
                 if(subCommand != null) {
@@ -151,6 +157,9 @@ public class DefaultCommandData implements CommandData {
                     }
                 }
             }
+
+            if(rootMapping == null)
+                throw new CommandParseException("Root method mapping must exist");
         } catch (Exception e) {
             e.printStackTrace();
         }

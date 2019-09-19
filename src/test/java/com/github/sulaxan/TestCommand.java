@@ -9,14 +9,14 @@ import com.github.sulaxan.xenon.annotation.permission.PermissionScope;
 import com.github.sulaxan.xenon.sender.CommandSender;
 import com.github.sulaxan.xenon.sender.ConsoleCommandSender;
 
-@Command(names = {"test"}, desc = "HI!")
+@Command(names = {"test"}, desc = "Tests basic functionality of Xenon")
 public class TestCommand {
 
-    @Option(value = "print", required = false, desc = "Print")
+    @Option(value = "p", longOption = "print", required = false, desc = "This value prints something")
     private boolean print;
-    @Option(value = "e", desc = "Quit")
+    @Option(value = "e", desc = "Some other option that determines whether to exit the program")
     private boolean exit;
-    @Option(value = "data", desc = "Data")
+    @Option(value = "data", desc = "A data option")
     private String data;
 
     @Root

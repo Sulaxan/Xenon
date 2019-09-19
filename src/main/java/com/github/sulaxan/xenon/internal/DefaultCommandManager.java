@@ -1,5 +1,6 @@
 package com.github.sulaxan.xenon.internal;
 
+import com.github.sulaxan.xenon.command.HelpCommand;
 import com.github.sulaxan.xenon.data.CommandData;
 import com.github.sulaxan.xenon.data.mapping.CommandMethodMapping;
 import com.github.sulaxan.xenon.data.mapping.MethodMapping;
@@ -14,6 +15,7 @@ import com.google.common.collect.Lists;
 import lombok.Getter;
 import org.apache.commons.cli.*;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
@@ -65,6 +67,7 @@ public class DefaultCommandManager extends CommandManager {
         try {
             parseAndRun(sender, command);
         } catch (Exception e) {
+            e.printStackTrace();
             sender.sendError("Something went wrong while parsing the command: " +
                     e.getClass().getSimpleName() + " " + e.getMessage());
         }
@@ -85,7 +88,7 @@ public class DefaultCommandManager extends CommandManager {
                 }
 
                 if(!found)
-                    return;
+                    continue;
             }
 
             // Remove the first arg (command portion) from the string
@@ -102,7 +105,27 @@ public class DefaultCommandManager extends CommandManager {
                 }
             }
 
-            Object commandObj = data.getCommandClass().getConstructor(classes).newInstance(constructorArgs);
+            Object commandObj = null;
+
+            for(Constructor constructor : data.getCommandClass().getConstructors()) {
+                boolean isValid = true;
+                if(constructor.getParameterCount() == classes.length) {
+                    for(int i = 0; i < classes.length; i++) {
+                        try {
+                            constructor.getParameterTypes()[i].asSubclass(classes[i]);
+                            isValid = false;
+                        } catch (Exception e) {
+                            // No need to print stack trace since we're just checking to see if they are similar
+                        }
+                    }
+                }
+
+                if(isValid)
+                    commandObj = constructor.newInstance(constructorArgs);
+            }
+
+            if(commandObj == null)
+                throw new CommandParseException("Could not find appropriate constructor for " + args[0]);
 
             // Parse the command using Apache's CommandLineParser
             CommandLine line = parser.parse(data.getOptions(), args, false);
@@ -183,5 +206,11 @@ public class DefaultCommandManager extends CommandManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static CommandData enableHelp(CommandManager manager) {
+        return manager.register(HelpCommand.class)
+                .withConstructorArgs(manager)
+                .build();
     }
 }

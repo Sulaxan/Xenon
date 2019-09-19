@@ -157,6 +157,8 @@ public class DefaultCommandManager extends CommandManager {
                     throw new NotEnoughPermissionsException("Insufficient permissions");
             }
 
+            // Check if the sender provided is a valid class of the call method's command sender
+            sender.getClass().asSubclass(callMethod.getCommandSenderClass());
             // Add all objects required for the method to be invoked
             List<Object> methodArgs = Lists.newArrayList(sender);
 

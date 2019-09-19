@@ -9,20 +9,28 @@ import java.lang.reflect.Method;
 public class CommandMapping implements CommandMethodMapping {
 
     private Method method;
+    private Class<?> commandSenderClass;
     private boolean includeArgs;
 
     @Setter
     private SubCommand subCommand;
 
-    public CommandMapping(Method method, boolean includeArgs) {
+    public CommandMapping(Method method, Class<?> commandSenderClass, boolean includeArgs) {
         this.method = method;
+        this.commandSenderClass = commandSenderClass;
         this.includeArgs = includeArgs;
     }
 
-    public CommandMapping(Method method, boolean includeArgs, SubCommand subCommand) {
+    public CommandMapping(Method method, Class<?> commandSenderClass, boolean includeArgs, SubCommand subCommand) {
         this.method = method;
+        this.commandSenderClass = commandSenderClass;
         this.includeArgs = includeArgs;
         this.subCommand = subCommand;
+    }
+
+    @Override
+    public Class<?> getCommandSenderClass() {
+        return commandSenderClass;
     }
 
     @Override

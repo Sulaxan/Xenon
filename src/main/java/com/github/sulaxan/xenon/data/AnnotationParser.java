@@ -47,7 +47,11 @@ public class AnnotationParser {
                 if(method.getParameterCount() == 2 && !isValidParameter(method, 1, String[].class))
                     throw new CommandParseException("Second argument must either be excluded " +
                             "or be of type String[]");
-                return new CommandMapping(method, method.getParameterCount() == 2);
+                return new CommandMapping(
+                        method,
+                        method.getParameterTypes()[0],
+                        method.getParameterCount() == 2
+                );
             } else throw new CommandParseException("First argument must inherit CommandSender");
         } else throw new CommandParseException("Not enough parameters for method " +
                 "(" + method.getName() + ")");

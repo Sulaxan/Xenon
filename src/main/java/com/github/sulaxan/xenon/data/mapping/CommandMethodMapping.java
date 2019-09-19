@@ -13,6 +13,12 @@ import com.github.sulaxan.xenon.annotation.SubCommand;
 public interface CommandMethodMapping extends MethodMapping {
 
     /**
+     * @return The {@link com.github.sulaxan.xenon.sender.CommandSender} class.
+     * This class can be any subclass of CommandSender, or simply just CommandSender.
+     */
+    Class<?> getCommandSenderClass();
+
+    /**
      * @return Whether to include String[] as an argument to the method.
      */
     boolean includeArgs();

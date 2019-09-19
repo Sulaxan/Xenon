@@ -7,6 +7,7 @@ import com.github.sulaxan.xenon.annotation.SubCommand;
 import com.github.sulaxan.xenon.annotation.permission.PermissionCheck;
 import com.github.sulaxan.xenon.annotation.permission.PermissionScope;
 import com.github.sulaxan.xenon.sender.CommandSender;
+import com.github.sulaxan.xenon.sender.ConsoleCommandSender;
 
 @Command(names = {"test"}, desc = "HI!")
 public class TestCommand {
@@ -26,17 +27,17 @@ public class TestCommand {
     }
 
     @SubCommand("subcommand")
-    public void aSubCommand(CommandSender sender, String[] args) {
+    public void aSubCommand(ConsoleCommandSender sender, String[] args) {
         sender.sendMessage("hi!");
     }
 
     @PermissionCheck(scope = PermissionScope.ROOT)
-    public boolean hasPermission(CommandSender sender) {
+    public boolean hasPermission(ConsoleCommandSender sender) {
         return true;
     }
 
     @PermissionCheck(subCommands = {"subcommand"})
-    public boolean hasPermissionSubCommand(CommandSender sender) {
-        return false;
+    public boolean hasPermissionSubCommand(ConsoleCommandSender sender) {
+        return true;
     }
 }

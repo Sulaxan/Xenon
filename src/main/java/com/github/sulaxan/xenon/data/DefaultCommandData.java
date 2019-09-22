@@ -13,6 +13,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+/**
+ * Default implementation for {@link CommandData}.
+ */
 public class DefaultCommandData implements CommandData {
 
     private Class<?> commandClass;
@@ -113,6 +116,9 @@ public class DefaultCommandData implements CommandData {
         return null;
     }
 
+    /**
+     * Parses the command class using {@link AnnotationParser}.
+     */
     public void parse() {
         try {
             if(commandClass.isAnnotationPresent(Command.class)) {

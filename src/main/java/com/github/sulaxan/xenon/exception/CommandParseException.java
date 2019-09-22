@@ -1,5 +1,9 @@
 package com.github.sulaxan.xenon.exception;
 
+/**
+ * Represents a runtime exception thrown when a command cannot be fully
+ * parsed.
+ */
 public class CommandParseException extends CommandRuntimeException {
 
     public CommandParseException() {

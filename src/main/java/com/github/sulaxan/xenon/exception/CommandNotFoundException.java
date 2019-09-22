@@ -1,5 +1,9 @@
 package com.github.sulaxan.xenon.exception;
 
+/**
+ * Represents a runtime exception thrown when a command cannot be found
+ * when a user issues a command.
+ */
 public class CommandNotFoundException extends CommandRuntimeException {
 
     public CommandNotFoundException() {

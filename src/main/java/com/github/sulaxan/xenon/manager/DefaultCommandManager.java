@@ -1,4 +1,4 @@
-package com.github.sulaxan.xenon.internal;
+package com.github.sulaxan.xenon.manager;
 
 import com.github.sulaxan.xenon.command.HelpCommand;
 import com.github.sulaxan.xenon.data.CommandData;
@@ -8,8 +8,6 @@ import com.github.sulaxan.xenon.data.mapping.OptionMapping;
 import com.github.sulaxan.xenon.exception.CommandNotFoundException;
 import com.github.sulaxan.xenon.exception.CommandParseException;
 import com.github.sulaxan.xenon.exception.NotEnoughPermissionsException;
-import com.github.sulaxan.xenon.manager.CommandManager;
-import com.github.sulaxan.xenon.manager.RegisterBuilder;
 import com.github.sulaxan.xenon.sender.CommandSender;
 import com.google.common.collect.Lists;
 import lombok.Getter;
@@ -20,6 +18,9 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Default implementation for {@link CommandManager}.
+ */
 @Getter
 public class DefaultCommandManager extends CommandManager {
 
@@ -73,6 +74,13 @@ public class DefaultCommandManager extends CommandManager {
         }
     }
 
+    /**
+     * Internal method to parse a command issued by a sender.
+     *
+     * @param sender The sender issuing the command.
+     * @param command The full command issued.
+     * @throws Exception If the command could not be fully parsed and executed.
+     */
     private void parseAndRun(CommandSender sender, String command) throws Exception {
         String[] args = command.split("\\s");
         // Match the command with the data
@@ -199,6 +207,13 @@ public class DefaultCommandManager extends CommandManager {
         throw new CommandNotFoundException("Could not parse " + command);
     }
 
+    /**
+     * Internal method to set a field.
+     *
+     * @param field The field to modify.
+     * @param object The instance to modify on.
+     * @param value The new value of the field.
+     */
     private void setField(Field field, Object object, Object value) {
         try {
             field.setAccessible(true);
@@ -208,6 +223,14 @@ public class DefaultCommandManager extends CommandManager {
         }
     }
 
+    /**
+     * Sets whether the default help implementation should be registered.
+     *
+     * @param manager The command manager to register to.
+     * @return The parsed command data.
+     *
+     * @see HelpCommand for more info on default help implementation.
+     */
     public static CommandData enableHelp(CommandManager manager) {
         return manager.register(HelpCommand.class)
                 .withConstructorArgs(manager)

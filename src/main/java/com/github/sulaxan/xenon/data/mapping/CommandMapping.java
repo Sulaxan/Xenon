@@ -6,6 +6,10 @@ import lombok.Setter;
 
 import java.lang.reflect.Method;
 
+/**
+ * Implementation of {@link CommandMethodMapping} that is used to identify
+ * a method as a command method.
+ */
 public class CommandMapping implements CommandMethodMapping {
 
     private Method method;

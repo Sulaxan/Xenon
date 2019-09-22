@@ -1,8 +1,7 @@
 package com.github.sulaxan;
 
-import com.github.sulaxan.xenon.command.HelpCommand;
 import com.github.sulaxan.xenon.sender.ConsoleCommandSender;
-import com.github.sulaxan.xenon.internal.DefaultCommandManager;
+import com.github.sulaxan.xenon.manager.DefaultCommandManager;
 
 import java.util.Scanner;
 

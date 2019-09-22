@@ -1,10 +1,14 @@
-package com.github.sulaxan.xenon.internal;
+package com.github.sulaxan.xenon.manager;
 
 import com.github.sulaxan.xenon.data.DefaultCommandData;
+import com.github.sulaxan.xenon.manager.DefaultCommandManager;
 import com.github.sulaxan.xenon.manager.RegisterBuilder;
 
 import java.util.concurrent.Callable;
 
+/**
+ * Default implementation for {@link RegisterBuilder}.
+ */
 public class DefaultRegisterBuilder implements RegisterBuilder {
 
     private DefaultCommandManager commandManager;

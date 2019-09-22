@@ -11,6 +11,12 @@ import com.github.sulaxan.xenon.sender.CommandSender;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+/**
+ * Util class used to parse annotations for methods. This class parses
+ * classes and methods assuming default documented behaviour.
+ *
+ * @see DefaultCommandData
+ */
 public class AnnotationParser {
 
     // Prevent initialization

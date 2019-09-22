@@ -4,6 +4,10 @@ import com.github.sulaxan.xenon.annotation.permission.PermissionCheck;
 
 import java.lang.reflect.Method;
 
+/**
+ * Implementation of {@link PermissionMethodMapping} used to identify
+ * permission checking methods.
+ */
 public class PermissionMapping implements PermissionMethodMapping {
 
     private Method method;

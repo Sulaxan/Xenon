@@ -15,6 +15,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Default command implementation for help.
+ */
 @Command(names = {"help"}, desc = "Get help information")
 public class HelpCommand {
 

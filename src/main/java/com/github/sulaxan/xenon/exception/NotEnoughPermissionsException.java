@@ -1,5 +1,9 @@
 package com.github.sulaxan.xenon.exception;
 
+/**
+ * Represents a runtime exception thrown when the issuing command sender
+ * has insufficient permissions.
+ */
 public class NotEnoughPermissionsException extends CommandRuntimeException {
 
     public NotEnoughPermissionsException() {

@@ -112,6 +112,9 @@ public class TestCommand {
 Note: Permission methods must have a return type of boolean, and must only have one parameter:
 either CommandSender, or some implementation of it.
 
+## Examples
+The code from ``Getting Started`` can be found in ``src/test/java/com/github/sulaxan/TestCommand.java``.
+
 ## Dependency
 Xenon can be used as a dependency in your project using Maven.
 

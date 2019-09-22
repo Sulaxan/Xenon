@@ -1,4 +1,4 @@
-# Xenon
+# Xenon [![](https://jitpack.io/v/Sulaxan/Xenon.svg)](https://jitpack.io/#Sulaxan/Xenon)
 A simple Java command library to create commands using classes.
 
 ## Getting Started

@@ -133,6 +133,6 @@ Add the following dependency:
 <dependency>
 	<groupId>com.github.Sulaxan</groupId>
 	<artifactId>Xenon</artifactId>
-	<version>v1.0</version>
+	<version>v1.0.1</version>
 </dependency>
 ```
